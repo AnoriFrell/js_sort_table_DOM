@@ -2,50 +2,29 @@
 
 // write code here
 const headerParams = document.querySelectorAll('thead th');
-// const employees = document.querySelectorAll('tbody tr');
+const employees = document.querySelectorAll('tbody tr');
 const table = document.querySelector('tbody');
-const rows = table.querySelectorAll('tr');
-let isAscending = true;
 
 headerParams.forEach((param) => {
-  param.addEventListener('click', (ev) => {
-    sorting(ev, isAscending);
-    isAscending = !isAscending;
-  });
+  param.addEventListener('click', sorting);
 });
 
-function sorting(ev, asc) {
+function sorting(ev) {
   const targetIndex = [...headerParams].indexOf(ev.target);
 
-  const sortedRows = [...rows].sort((a, b) => {
+  const ascSorted = [...employees].sort((a, b) => {
     const aValue = a.children[targetIndex].innerText;
     const bValue = b.children[targetIndex].innerText;
 
-    const aNum = parseFloat(aValue.replace(/[^0-9.-]+/g, ''));
-    const bNum = parseFloat(bValue.replace(/[^0-9.-]+/g, ''));
-
-    if (!isNaN(aNum) || !isNaN(bNum)) {
-      return asc ? aNum - bNum : bNum - aNum;
+    if (isNaN(+aValue) && aValue[0] !== '$') {
+      return aValue.localeCompare(bValue);
     } else {
-      return asc ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+      return (
+        parseFloat(aValue.replace(/[^0-9.-]+/g, '')) -
+        parseFloat(bValue.replace(/[^0-9.-]+/g, ''))
+      );
     }
   });
 
-  table.append(...sortedRows);
+  table.append(...ascSorted);
 }
-
-// const ascSorted = [...employees].sort((a, b) => {
-//   const aValue = a.children[targetIndex].innerText;
-//   const bValue = b.children[targetIndex].innerText;
-
-//   if (isNaN(+aValue)) {
-//     return aValue.localeCompare(bValue);
-//   } else {
-//     return (
-//       parseFloat(aValue.replace(/[^0-9.-]+/g, '')) -
-//       parseFloat(bValue.replace(/[^0-9.-]+/g, ''))
-//     );
-//   }
-// });
-
-// document.querySelector('tbody').append(...ascSorted);
